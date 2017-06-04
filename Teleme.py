@@ -62,7 +62,7 @@ def echo_all(updates):
         except Exception as e:
             print(e)
 
-def main():
+def listener():
     last_update_id = None
     while True:
         updates = get_updates(last_update_id)
@@ -70,8 +70,3 @@ def main():
             last_update_id = get_last_update_id(updates) + 1
             echo_all(updates)
         time.sleep(0.5)
-
-
-if __name__ == '__main__':
-	get_all_tweets("steam_games")
-	main()
