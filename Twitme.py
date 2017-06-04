@@ -58,7 +58,7 @@ def get_all_tweets(screen_name):
     outtweets = [[tweet.id_str, tweet.created_at, tweet.text.encode("utf-8")] for tweet in alltweets]
     
     #write the csv  
-    with open('%s_tweets.csv' % screen_name, 'w') as f:
+    with open('%s_tweets.csv' % screen_name, 'wb') as f:
         writer = csv.writer(f)
         writer.writerow(["id","created_at","text"])
         writer.writerows(outtweets)
@@ -69,7 +69,7 @@ def get_all_tweets(screen_name):
 def import_data(delimited_file):
     """imports the a delimited file and casts the data to a list"""
     
-    with open(delimited_file, 'r') as csvfile:
+    with open(delimited_file, 'rb') as csvfile:
         all_data = list(csv.reader(csvfile, delimiter=','))
     return all_data
     
@@ -82,6 +82,3 @@ def get_basic_statistics(data):
     text = []
     for text in data:
         print(text[2])
-    
-data = import_data('steam_games_tweets.csv')
-get_basic_statistics(data)
