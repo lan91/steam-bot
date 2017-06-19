@@ -1,6 +1,7 @@
 import telebot
 import urllib
 import time
+import datetime
 import argparse
 import string
 import json
@@ -14,7 +15,6 @@ import logging
 #Telegram
 logging.basicConfig()
 logger = logging.getLogger(__name__)
-pause = 1
 
 TOKEN = "389091608:AAEQefEq_KSDOzhpeG1Wk4R9dby950BlVeo"
 bot = telebot.TeleBot(TOKEN)
@@ -27,12 +27,9 @@ def send_welcome(message):
 	for text in data:
 		bot.reply_to(message, text[2])
 
-@bot.message_handler(commands=['stop'])
-def stop(message):
-	pause = 0
-
 @bot.message_handler(commands=['echo'])
 def send_mad(message):
+	pause = 1
     	cadena = str(message.from_user.id) + ',' + message.from_user.username + '\n'
     	infile = open('users_list.txt', 'r')
     	for line in infile:
@@ -51,19 +48,25 @@ def send_mad(message):
 @bot.message_handler(commands=['future'])
 def send_mess(message):
 	mess = message.text.split(" ")
-	infile = open('users_list.txt', 'r')
-	for line in infile:
-		aux = line.split(",")
-		print(len(aux[0:-1]))
-		print(len(mess[1]))
-		if (aux[1][:-1] == mess[1]):
-			print(message.from_user.id)
-			print(aux[0])
-			userin=int(aux[0])
-			bot.send_message(userin, 'Dood')	
-			pass		
-	infile.close()
-	print(mess[2])
+	timact=datetime.datetime.now()
+	timyact=time.mktime(datetime.datetime.strptime(str(timact[0:-6]), "%Y-%m-%d %H:%M:%S").timetuple())
+	timy=time.mktime(datetime.datetime.strptime(mess[2], "%d/%m/%Y").timetuple())
+	print(timyact)
+	print(timy)
+	if(len(mess)<3):
+		bot.send_message(message.from_user.id, 'El comando es /future usuario fecha texto')
+	else:	
+		infile = open('users_list.txt', 'r')
+		for line in infile:
+			aux = line.split(",")
+			if (aux[1][:-1] == mess[1]):
+				userin=int(aux[0])
+				if(timyact>=timy):
+					bot.send_message(userin,mess[3])	
+					pass		
+		infile.close()
+		
+
 
 
 def listener():
